@@ -41,7 +41,7 @@ export const siteConfig = {
       slug: "comexsoft-python-engineer",
       company: "ComexSoft",
       dateRange: "January 2026 - Present",
-      location: "Remote",
+      location: "Biarritz, France & Santiago de Chile, Chile",
     },
     {
       slug: "tk-elevator-bi-analyst",
