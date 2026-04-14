@@ -35,5 +35,17 @@ import "../styles/global.css";
       <Education />
     </section>
     <Footer />
+
+    <script>
+      import { applyTranslations, getStoredLang } from "../i18n/i18n";
+      // Apply stored language on first paint
+      applyTranslations(getStoredLang());
+      // Re-apply if another component triggers a change
+      window.addEventListener("langchange", (e) => {
+        applyTranslations(
+          (e as CustomEvent<{ lang: "en" | "es" }>).detail.lang,
+        );
+      });
+    </script>
   </body>
 </html>

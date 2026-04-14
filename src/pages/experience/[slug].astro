@@ -1,0 +1,194 @@
+---
+import { siteConfig } from "../../config";
+import "../../styles/global.css";
+
+export function getStaticPaths() {
+  return siteConfig.experience.map((exp) => ({
+    params: { slug: exp.slug },
+    props: { exp },
+  }));
+}
+
+const { exp } = Astro.props;
+const index = siteConfig.experience.findIndex((e) => e.slug === exp.slug);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={`${exp.title} at ${exp.company}`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{exp.title} at {exp.company} — {siteConfig.name}</title>
+  </head>
+  <body class="bg-white min-h-screen">
+    <!-- Header -->
+    <header
+      class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100"
+    >
+      <nav
+        class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between"
+      >
+        <a
+          href="/"
+          class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors font-medium"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M5 12l14 0"></path>
+            <path d="M5 12l6 6"></path>
+            <path d="M5 12l6 -6"></path>
+          </svg>
+          <span data-i18n="detail.back">Back</span>
+        </a>
+        <span class="text-sm text-gray-400" data-i18n="detail.experience.label"
+          >Experience</span
+        >
+      </nav>
+    </header>
+
+    <!-- Main content -->
+    <main class="max-w-4xl mx-auto px-6 pt-28 pb-24">
+      <!-- Label -->
+      <span
+        class="text-sm font-mono"
+        style={`color: ${siteConfig.accentColor}`}
+      >
+        0{index + 1} — Experience
+      </span>
+
+      <!-- Title -->
+      <h1
+        class="mt-2 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight"
+      >
+        {exp.title}
+      </h1>
+
+      <!-- Company -->
+      <p
+        class="mt-2 text-2xl sm:text-3xl font-semibold"
+        style={`color: ${siteConfig.accentColor}`}
+      >
+        {exp.company}
+      </p>
+
+      <!-- Accent bar -->
+      <div
+        class="w-[75px] h-[5px] mt-4 rounded-full"
+        style={`background-color: ${siteConfig.accentColor}`}
+      >
+      </div>
+
+      <!-- Meta -->
+      <div class="flex flex-wrap gap-4 mt-8">
+        <span
+          class="inline-flex items-center gap-2 text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path
+              d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"
+            ></path>
+            <path d="M16 3v4"></path>
+            <path d="M8 3v4"></path>
+            <path d="M4 11h16"></path>
+            <path d="M11 15h1"></path>
+            <path d="M12 15v3"></path>
+          </svg>
+          {exp.dateRange}
+        </span>
+        {
+          exp.location && (
+            <span class="inline-flex items-center gap-2 text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
+              </svg>
+              {exp.location}
+            </span>
+          )
+        }
+      </div>
+
+      <!-- Description -->
+      {
+        exp.description && (
+          <p class="mt-10 text-base sm:text-lg text-gray-600 leading-relaxed">
+            {exp.description}
+          </p>
+        )
+      }
+
+      <!-- Bullets -->
+      <div class="mt-10">
+        <h2
+          class="text-xl font-semibold text-gray-900 mb-4"
+          data-i18n="detail.keyContributions"
+        >
+          Key Contributions
+        </h2>
+        <ul class="space-y-3">
+          {
+            exp.bullets.map((bullet) => (
+              <li class="flex items-start gap-3">
+                <span
+                  class="inline-block w-2 h-2 rounded-full mt-2 flex-shrink-0"
+                  style={`background-color: ${siteConfig.accentColor}`}
+                />
+                <span class="text-sm sm:text-base text-gray-600">{bullet}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </main>
+
+    <script>
+      import { applyTranslations, getStoredLang } from "../../i18n/i18n";
+      applyTranslations(getStoredLang());
+      window.addEventListener("langchange", (e) => {
+        applyTranslations(
+          (e as CustomEvent<{ lang: "en" | "es" }>).detail.lang,
+        );
+      });
+    </script>
+  </body>
+</html>

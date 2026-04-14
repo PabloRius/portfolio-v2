@@ -1,0 +1,66 @@
+---
+// LangToggle.astro — renders the EN / ES switcher button in the header
+---
+
+<div class="flex items-center gap-1 ml-4">
+  <button
+    id="lang-en"
+    aria-label="Switch to English"
+    class="lang-btn px-2 py-1 rounded text-sm font-semibold transition-colors duration-200"
+  >
+    EN
+  </button>
+  <span class="text-gray-300 select-none">|</span>
+  <button
+    id="lang-es"
+    aria-label="Cambiar a Español"
+    class="lang-btn px-2 py-1 rounded text-sm font-semibold transition-colors duration-200"
+  >
+    ES
+  </button>
+</div>
+
+<script>
+  import {
+    applyTranslations,
+    getStoredLang,
+    setStoredLang,
+  } from "../i18n/i18n";
+  import type { Lang } from "../i18n/translations";
+
+  function updateButtons(lang: Lang) {
+    const enBtn = document.getElementById("lang-en")!;
+    const esBtn = document.getElementById("lang-es")!;
+    if (lang === "en") {
+      enBtn.classList.add("text-gray-900", "font-bold");
+      enBtn.classList.remove("text-gray-400");
+      esBtn.classList.add("text-gray-400");
+      esBtn.classList.remove("text-gray-900", "font-bold");
+    } else {
+      esBtn.classList.add("text-gray-900", "font-bold");
+      esBtn.classList.remove("text-gray-400");
+      enBtn.classList.add("text-gray-400");
+      enBtn.classList.remove("text-gray-900", "font-bold");
+    }
+  }
+
+  function switchLang(lang: Lang) {
+    setStoredLang(lang);
+    applyTranslations(lang);
+    updateButtons(lang);
+    // Emit custom event so other components can react if needed
+    window.dispatchEvent(new CustomEvent("langchange", { detail: { lang } }));
+  }
+
+  // Initialise on first load
+  const current = getStoredLang();
+  applyTranslations(current);
+  updateButtons(current);
+
+  document
+    .getElementById("lang-en")!
+    .addEventListener("click", () => switchLang("en"));
+  document
+    .getElementById("lang-es")!
+    .addEventListener("click", () => switchLang("es"));
+</script>

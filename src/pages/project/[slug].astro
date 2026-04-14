@@ -1,0 +1,159 @@
+---
+import { siteConfig } from "../../config";
+import "../../styles/global.css";
+
+export function getStaticPaths() {
+  return siteConfig.projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const index = siteConfig.projects.findIndex((p) => p.slug === project.slug);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={project.description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{project.name} — {siteConfig.name}</title>
+  </head>
+  <body class="bg-white min-h-screen">
+    <!-- Header -->
+    <header
+      class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100"
+    >
+      <nav
+        class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between"
+      >
+        <a
+          href="/"
+          class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors font-medium"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M5 12l14 0"></path>
+            <path d="M5 12l6 6"></path>
+            <path d="M5 12l6 -6"></path>
+          </svg>
+          <span data-i18n="detail.back">Back</span>
+        </a>
+        <span class="text-sm text-gray-400" data-i18n="detail.project.label"
+          >Project</span
+        >
+      </nav>
+    </header>
+
+    <!-- Main content -->
+    <main class="max-w-4xl mx-auto px-6 pt-28 pb-24">
+      <!-- Label -->
+      <span
+        class="text-sm font-mono"
+        style={`color: ${siteConfig.accentColor}`}
+      >
+        0{index + 1}
+      </span>
+
+      <!-- Title -->
+      <h1
+        class="mt-2 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight"
+      >
+        {project.name}
+      </h1>
+
+      <!-- Accent bar -->
+      <div
+        class="w-[75px] h-[5px] mt-4 rounded-full"
+        style={`background-color: ${siteConfig.accentColor}`}
+      >
+      </div>
+
+      <!-- Skills -->
+      {
+        project.skills && project.skills.length > 0 && (
+          <div class="flex flex-wrap gap-2 mt-8">
+            {project.skills.map((skill) => (
+              <span class="px-3 py-1.5 bg-gray-900 text-white rounded-lg text-sm font-medium">
+                {skill}
+              </span>
+            ))}
+          </div>
+        )
+      }
+
+      <!-- Description -->
+      <div class="mt-10 space-y-6">
+        <p class="text-lg sm:text-xl text-gray-500 leading-relaxed">
+          {project.description}
+        </p>
+        {
+          project.longDescription && (
+            <p class="text-base sm:text-lg text-gray-600 leading-relaxed">
+              {project.longDescription}
+            </p>
+          )
+        }
+      </div>
+
+      <!-- Link -->
+      {
+        project.link && (
+          <div class="mt-12">
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-3 px-6 py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-700 transition-colors duration-200"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+              </svg>
+              <span data-i18n="detail.viewOnGithub">View on GitHub</span>
+            </a>
+          </div>
+        )
+      }
+    </main>
+
+    <script>
+      import { applyTranslations, getStoredLang } from "../../i18n/i18n";
+      applyTranslations(getStoredLang());
+      window.addEventListener("langchange", (e) => {
+        applyTranslations(
+          (e as CustomEvent<{ lang: "en" | "es" }>).detail.lang,
+        );
+      });
+    </script>
+  </body>
+</html>
