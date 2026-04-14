@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from "../config";
+import { ui } from "../i18n/translations";
 ---
 
 <section id="about" class="p-8 sm:p-12 md:p-16 lg:p-24">
@@ -24,7 +25,7 @@ import { siteConfig } from "../config";
           class="text-lg sm:text-xl md:text-2xl leading-relaxed text-gray-600"
           data-i18n="about.bio"
         >
-          {siteConfig.aboutMe}
+          {ui.en["about.bio"]}
         </p>
 
         <div class="pt-4">

@@ -43,7 +43,7 @@ import "../styles/global.css";
       // Re-apply if another component triggers a change
       window.addEventListener("langchange", (e) => {
         applyTranslations(
-          (e as CustomEvent<{ lang: "en" | "es" }>).detail.lang,
+          (e as CustomEvent<{ lang: "en" | "es" | "fr" }>).detail.lang,
         );
       });
     </script>

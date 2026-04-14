@@ -1,6 +1,12 @@
 ---
 import { siteConfig } from "../config";
+import { content } from "../i18n/translations";
 const hasEducation = siteConfig.education && siteConfig.education.length > 0;
+// Merge structural config with default EN text
+const educations = siteConfig.education.map((e) => ({
+  ...e,
+  ...content.en.education.find((c) => c.slug === e.slug)!,
+}));
 ---
 
 {
@@ -23,14 +29,17 @@ const hasEducation = siteConfig.education && siteConfig.education.length > 0;
 
           <div class="lg:col-span-8">
             <div class="space-y-8">
-              {siteConfig.education.map((edu) => (
+              {educations.map((edu) => (
                 <a
                   href={`/education/${edu.slug}`}
                   class="block bg-white rounded-lg shadow-sm border border-gray-100 p-4 sm:p-5 md:p-6 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
                 >
                   <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4">
                     <div>
-                      <h3 class="text-lg sm:text-xl font-semibold text-gray-900">
+                      <h3
+                        class="text-lg sm:text-xl font-semibold text-gray-900"
+                        data-i18n-content={`education:${edu.slug}:degree`}
+                      >
                         {edu.degree}
                       </h3>
                       <p
@@ -45,10 +54,13 @@ const hasEducation = siteConfig.education && siteConfig.education.length > 0;
                     </span>
                   </div>
                   <ul class="space-y-2">
-                    {edu.achievements.map((achievement) => (
+                    {edu.achievements.map((achievement, i) => (
                       <li class="flex items-start">
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-gray-400 mt-2 mr-3 flex-shrink-0" />
-                        <span class="text-sm sm:text-base text-gray-600">
+                        <span
+                          class="text-sm sm:text-base text-gray-600"
+                          data-i18n-content={`education:${edu.slug}:achievements:${i}`}
+                        >
                           {achievement}
                         </span>
                       </li>

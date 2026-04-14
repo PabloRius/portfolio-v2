@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from "../../config";
+import { content } from "../../i18n/translations";
 import "../../styles/global.css";
 
 export function getStaticPaths() {
@@ -11,6 +12,8 @@ export function getStaticPaths() {
 
 const { exp } = Astro.props;
 const index = siteConfig.experience.findIndex((e) => e.slug === exp.slug);
+// Default (EN) translatable content rendered at build time
+const expContent = content.en.experience.find((e) => e.slug === exp.slug)!;
 ---
 
 <html lang="en">
@@ -19,14 +22,17 @@ const index = siteConfig.experience.findIndex((e) => e.slug === exp.slug);
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={`${exp.title} at ${exp.company}`} />
+    <meta
+      name="description"
+      content={`${expContent.title} at ${exp.company}`}
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
       rel="stylesheet"
     />
-    <title>{exp.title} at {exp.company} — {siteConfig.name}</title>
+    <title>{expContent.title} at {exp.company} — {siteConfig.name}</title>
   </head>
   <body class="bg-white min-h-screen">
     <!-- Header -->
@@ -77,8 +83,9 @@ const index = siteConfig.experience.findIndex((e) => e.slug === exp.slug);
       <!-- Title -->
       <h1
         class="mt-2 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight"
+        data-i18n-content={`experience:${exp.slug}:title`}
       >
-        {exp.title}
+        {expContent.title}
       </h1>
 
       <!-- Company -->
@@ -150,9 +157,12 @@ const index = siteConfig.experience.findIndex((e) => e.slug === exp.slug);
 
       <!-- Description -->
       {
-        exp.description && (
-          <p class="mt-10 text-base sm:text-lg text-gray-600 leading-relaxed">
-            {exp.description}
+        expContent.description && (
+          <p
+            class="mt-10 text-base sm:text-lg text-gray-600 leading-relaxed"
+            data-i18n-content={`experience:${exp.slug}:description`}
+          >
+            {expContent.description}
           </p>
         )
       }
@@ -165,15 +175,20 @@ const index = siteConfig.experience.findIndex((e) => e.slug === exp.slug);
         >
           Key Contributions
         </h2>
-        <ul class="space-y-3">
+        <ul class="space-y-3" id="bullets-list">
           {
-            exp.bullets.map((bullet) => (
+            expContent.bullets.map((bullet, i) => (
               <li class="flex items-start gap-3">
                 <span
                   class="inline-block w-2 h-2 rounded-full mt-2 flex-shrink-0"
                   style={`background-color: ${siteConfig.accentColor}`}
                 />
-                <span class="text-sm sm:text-base text-gray-600">{bullet}</span>
+                <span
+                  class="text-sm sm:text-base text-gray-600"
+                  data-i18n-content={`experience:${exp.slug}:bullet:${i}`}
+                >
+                  {bullet}
+                </span>
               </li>
             ))
           }
@@ -186,7 +201,7 @@ const index = siteConfig.experience.findIndex((e) => e.slug === exp.slug);
       applyTranslations(getStoredLang());
       window.addEventListener("langchange", (e) => {
         applyTranslations(
-          (e as CustomEvent<{ lang: "en" | "es" }>).detail.lang,
+          (e as CustomEvent<{ lang: "en" | "es" | "fr" }>).detail.lang,
         );
       });
     </script>

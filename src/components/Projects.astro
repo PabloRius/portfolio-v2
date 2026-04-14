@@ -1,6 +1,12 @@
 ---
 import { siteConfig } from "../config";
+import { content } from "../i18n/translations";
 const hasProjects = siteConfig.projects && siteConfig.projects.length > 0;
+// Merge structural config with default EN text
+const projects = siteConfig.projects.map((p) => ({
+  ...p,
+  ...content.en.projects.find((c) => c.slug === p.slug)!,
+}));
 ---
 
 {
@@ -23,7 +29,7 @@ const hasProjects = siteConfig.projects && siteConfig.projects.length > 0;
 
           <div class="lg:col-span-8">
             <div class="space-y-8">
-              {siteConfig.projects.map((project, index) => (
+              {projects.map((project, index) => (
                 <div class="group relative">
                   <a
                     href={`/project/${project.slug}`}
@@ -53,12 +59,18 @@ const hasProjects = siteConfig.projects && siteConfig.projects.length > 0;
                         >
                           0{index + 1}
                         </span>
-                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
+                        <h3
+                          class="text-xl sm:text-2xl font-bold text-gray-900 mt-1"
+                          data-i18n-content={`projects:${project.slug}:name`}
+                        >
                           {project.name}
                         </h3>
                       </div>
 
-                      <p class="text-base sm:text-lg text-gray-600 leading-relaxed pr-12 sm:pr-14 md:pr-16">
+                      <p
+                        class="text-base sm:text-lg text-gray-600 leading-relaxed pr-12 sm:pr-14 md:pr-16"
+                        data-i18n-content={`projects:${project.slug}:description`}
+                      >
                         {project.description}
                       </p>
 

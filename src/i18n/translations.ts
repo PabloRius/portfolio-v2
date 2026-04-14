@@ -1,4 +1,4 @@
-export type Lang = "en" | "es";
+export type Lang = "en" | "es" | "fr";
 
 export const DEFAULT_LANG: Lang = "en";
 
@@ -71,6 +71,39 @@ export const ui = {
     "detail.viewOnGithub": "Ver en GitHub",
     "detail.keyContributions": "Contribuciones clave",
     "detail.achievements": "Logros y destacados",
+  },
+  fr: {
+    // Nav
+    "nav.about": "À propos",
+    "nav.projects": "Projets",
+    "nav.experience": "Expérience",
+    "nav.education": "Formation",
+
+    // Hero
+    "hero.greeting": "Bonjour ! 👋",
+    "hero.iam": "Je suis",
+
+    // About
+    "about.heading": "À propos de moi",
+    "about.bio":
+      "Je suis Ingénieur Logiciel spécialisé dans l'écosystème Python, avec un fort accent sur l'Ingénierie des Données, l'automatisation web et la construction d'infrastructures cloud. Mon objectif n'est pas de créer des modèles statistiques, mais de construire les 'autoroutes' robustes et évolutives sur lesquelles transitent les données d'une entreprise. Actuellement, je conçois et gère des écosystèmes d'extraction de données de bout en bout, transformant des données web non structurées en actifs stratégiques. Je suis titulaire d'un Master en Ingénierie Logicielle et Management de Kingston University (Londres) et d'une Licence en Informatique de l'Universidad Carlos III de Madrid.",
+
+    // Sections
+    "section.projects": "Projets",
+    "section.experience": "Expérience",
+    "section.education": "Formation",
+
+    // Footer
+    "footer.rights": "Tous droits réservés.",
+
+    // Detail pages
+    "detail.back": "Retour",
+    "detail.project.label": "Projet",
+    "detail.experience.label": "Expérience",
+    "detail.education.label": "Formation",
+    "detail.viewOnGithub": "Voir sur GitHub",
+    "detail.keyContributions": "Contributions clés",
+    "detail.achievements": "Réalisations & Points forts",
   },
 } as const satisfies Record<Lang, Record<string, string>>;
 
@@ -264,6 +297,98 @@ export const content = {
           "Un semestre de intercambio internacional en la Universidad de Nueva Gales del Sur (Sídney), una de las principales universidades de investigación de Australia. Esta experiencia amplió mi perspectiva académica y cultural, exponiéndome a diferentes metodologías de enseñanza y colaborando con estudiantes de toda la región Asia-Pacífico.",
         achievements: [
           "Intercambio académico internacional que amplió la perspectiva global y la adaptabilidad técnica.",
+        ],
+      },
+    ],
+  },
+  fr: {
+    projects: [
+      {
+        slug: "ecommerce-market-intelligence-scraper",
+        name: "Scraper d'Intelligence de Marché pour l'E-Commerce",
+        description:
+          "Conception de scrapers robustes avec Python et Crawlee, utilisant l'émulation de navigateur pour accéder à des plateformes e-commerce très dynamiques.",
+        longDescription:
+          "Ce projet a consisté à construire une plateforme d'intelligence web capable d'extraire des données de marché structurées depuis des sites e-commerce très dynamiques. Les scrapers utilisent l'émulation d'empreinte digitale du navigateur pour éviter la détection de bots, et les données sont traitées via un pipeline qui les normalise et les stocke pour des analyses ultérieures. Le système est conçu pour être fiable, avec des tentatives automatiques, des rapports d'erreurs et une orchestration basée sur Prefect.",
+      },
+      {
+        slug: "automated-incident-reporting-pipeline",
+        name: "Pipeline Automatisé de Rapports d'Incidents",
+        description:
+          "Intégration automatisée de données pour les rapports d'incidents avec Node.js et des APIs, réduisant le temps de traitement pour les gestionnaires.",
+        longDescription:
+          "Conception et implémentation d'un pipeline d'intégration de données de bout en bout connectant plusieurs APIs internes pour consolider les données d'incidents dans un système de rapports unifié. L'automatisation a réduit les heures de travail manuel hebdomadaire pour les responsables opérationnels, et a introduit des synchronisations planifiées avec des tableaux de bord en temps réel dans Power BI. Le système inclut également des alertes automatiques pour les incidents critiques.",
+      },
+      {
+        slug: "real-time-sensor-data-platform",
+        name: "Plateforme de Données de Capteurs en Temps Réel",
+        description:
+          "Développement d'un projet full-stack pour gérer les données de capteurs avec Azure IoT, Node.js et React, améliorant l'interaction et la visualisation en temps réel.",
+        longDescription:
+          "Construction d'une plateforme IoT complète intégrant Azure IoT Hub avec un backend Node.js et un frontend React. Les données des capteurs sont ingérées en temps réel, traitées et visualisées dans des tableaux de bord interactifs. La plateforme supporte plusieurs flux d'appareils simultanément et inclut la relecture des données historiques, des alertes par seuil et un contrôle d'accès basé sur les rôles pour différentes équipes.",
+      },
+    ],
+    experience: [
+      {
+        slug: "comexsoft-python-engineer",
+        title: "Ingénieur Données & Automatisation Python",
+        description:
+          "Chez ComexSoft, je me spécialise dans la construction de l'infrastructure de données qui alimente l'intelligence de marché. Mon travail couvre l'intégralité du cycle de vie des données : de l'écriture de scrapers résilients et évolutifs qui extraient des informations brutes du web, à l'orchestration des pipelines qui transforment et chargent ces données dans des formats utilisables, jusqu'au provisionnement de l'infrastructure cloud qui héberge le tout.",
+        bullets: [
+          "Conception de scrapers robustes avec Python et Crawlee, utilisant l'émulation de navigateur pour naviguer sur des plateformes e-commerce très dynamiques.",
+          "Conception et gestion de pipelines de données de bout en bout avec Prefect, garantissant une haute fiabilité, une surveillance et un traitement efficace des données.",
+          "Déploiement d'architectures cloud évolutives sur AWS via l'Infrastructure as Code avec Pulumi, optimisant significativement le provisionnement des environnements.",
+          "Configuration et gestion des environnements serveur et de développement avec NixOS, améliorant la reproductibilité du système.",
+        ],
+      },
+      {
+        slug: "tk-elevator-bi-analyst",
+        title: "Analyste Business Intelligence (Stage)",
+        description:
+          "Durant mon stage chez TK Elevator, j'ai travaillé au sein du département Santé et Sécurité au Travail (SST), transformant des données brutes d'incidents en informations exploitables. J'ai construit des outils d'automatisation qui ont éliminé les goulots d'étranglement dans la génération de rapports et créé des tableaux de bord offrant à la direction une visibilité claire sur les tendances de sécurité dans plusieurs sites.",
+        bullets: [
+          "Automatisation de l'intégration des données pour les rapports d'incidents avec Node.js et des APIs, réduisant le temps de traitement pour les gestionnaires.",
+          "Création d'indicateurs de performance pour le département SST, utilisant de grands volumes de données pour améliorer l'analyse et la prise de décision.",
+          "Développement de tableaux de bord Power BI pour visualiser les tendances des incidents, aidant à prioriser les mesures préventives dans les zones à risque.",
+        ],
+      },
+      {
+        slug: "ntt-data-software-engineer",
+        title: "Ingénieur Logiciel (Stage)",
+        description:
+          "Chez NTT DATA, j'ai contribué à des projets logiciels d'envergure pour de grands clients des secteurs du transport et des infrastructures. J'ai travaillé sur toute la pile, de la construction de pipelines CI/CD qui ont amélioré la vélocité de l'équipe, au développement de tableaux de bord IoT en temps réel pour Renfe, l'opérateur ferroviaire national espagnol.",
+        bullets: [
+          "Construction et maintenance de pipelines CI/CD avec GitHub Actions, automatisant les déploiements et réduisant l'effort manuel de 50%.",
+          "Développement d'un projet full-stack pour gérer les données de capteurs avec Azure IoT, Node.js et React, améliorant l'interaction et la visualisation en temps réel.",
+          "Création du frontend pour l'application de visualisation de données en temps réel de Renfe avec React et TypeScript, améliorant la sécurité et la gestion des risques.",
+        ],
+      },
+    ],
+    education: [
+      {
+        slug: "kingston-university-meng",
+        degree:
+          "Master en Ingénierie - MEng, Ingénierie Logicielle et Management",
+        description:
+          "Ce programme de troisième cycle à Kingston University (Londres) se concentre sur l'intersection des pratiques avancées d'ingénierie logicielle et du management technologique. Le programme couvre le leadership Agile et Scrum, l'architecture d'entreprise, la conception de systèmes évolutifs et les aspects business de la livraison de produits logiciels dans des organisations complexes.",
+        achievements: [
+          "Spécialisation en méthodologies Agile, leadership de projet et solutions technologiques évolutives.",
+        ],
+      },
+      {
+        slug: "uc3m-bsc-computer-science",
+        degree: "Licence en Informatique",
+        description:
+          "Un diplôme de quatre ans couvrant les piliers fondamentaux de l'informatique : algorithmes et structures de données, systèmes d'exploitation, réseaux, bases de données, génie logiciel et mathématiques. Ce programme a fourni la base technique rigoureuse qui sous-tend tout mon travail professionnel ultérieur.",
+        achievements: ["Solides bases en informatique et en génie logiciel."],
+      },
+      {
+        slug: "unsw-exchange-computer-science",
+        degree: "Programme d'Échange - Informatique",
+        description:
+          "Un semestre d'échange international à l'Université de Nouvelle-Galles du Sud (Sydney), l'une des principales universités de recherche d'Australie. Cette expérience a élargi ma perspective académique et culturelle, m'exposant à différentes méthodologies d'enseignement et à la collaboration avec des étudiants de toute la région Asie-Pacifique.",
+        achievements: [
+          "Échange académique international élargissant la perspective mondiale et l'adaptabilité technique.",
         ],
       },
     ],

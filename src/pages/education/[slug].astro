@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from "../../config";
+import { content } from "../../i18n/translations";
 import "../../styles/global.css";
 
 export function getStaticPaths() {
@@ -11,6 +12,8 @@ export function getStaticPaths() {
 
 const { edu } = Astro.props;
 const index = siteConfig.education.findIndex((e) => e.slug === edu.slug);
+// Default (EN) translatable content rendered at build time
+const eduContent = content.en.education.find((e) => e.slug === edu.slug)!;
 ---
 
 <html lang="en">
@@ -19,14 +22,17 @@ const index = siteConfig.education.findIndex((e) => e.slug === edu.slug);
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={`${edu.degree} at ${edu.school}`} />
+    <meta
+      name="description"
+      content={`${eduContent.degree} at ${edu.school}`}
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
       rel="stylesheet"
     />
-    <title>{edu.degree} — {siteConfig.name}</title>
+    <title>{eduContent.degree} — {siteConfig.name}</title>
   </head>
   <body class="bg-white min-h-screen">
     <!-- Header -->
@@ -77,8 +83,9 @@ const index = siteConfig.education.findIndex((e) => e.slug === edu.slug);
       <!-- Degree -->
       <h1
         class="mt-2 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight"
+        data-i18n-content={`education:${edu.slug}:degree`}
       >
-        {edu.degree}
+        {eduContent.degree}
       </h1>
 
       <!-- School -->
@@ -150,16 +157,19 @@ const index = siteConfig.education.findIndex((e) => e.slug === edu.slug);
 
       <!-- Description -->
       {
-        edu.description && (
-          <p class="mt-10 text-base sm:text-lg text-gray-600 leading-relaxed">
-            {edu.description}
+        eduContent.description && (
+          <p
+            class="mt-10 text-base sm:text-lg text-gray-600 leading-relaxed"
+            data-i18n-content={`education:${edu.slug}:description`}
+          >
+            {eduContent.description}
           </p>
         )
       }
 
       <!-- Achievements -->
       {
-        edu.achievements && edu.achievements.length > 0 && (
+        eduContent.achievements && eduContent.achievements.length > 0 && (
           <div class="mt-10">
             <h2
               class="text-xl font-semibold text-gray-900 mb-4"
@@ -168,13 +178,16 @@ const index = siteConfig.education.findIndex((e) => e.slug === edu.slug);
               Achievements &amp; Highlights
             </h2>
             <ul class="space-y-3">
-              {edu.achievements.map((achievement) => (
+              {eduContent.achievements.map((achievement, i) => (
                 <li class="flex items-start gap-3">
                   <span
                     class="inline-block w-2 h-2 rounded-full mt-2 flex-shrink-0"
                     style={`background-color: ${siteConfig.accentColor}`}
                   />
-                  <span class="text-sm sm:text-base text-gray-600">
+                  <span
+                    class="text-sm sm:text-base text-gray-600"
+                    data-i18n-content={`education:${edu.slug}:achievements:${i}`}
+                  >
                     {achievement}
                   </span>
                 </li>
@@ -190,7 +203,7 @@ const index = siteConfig.education.findIndex((e) => e.slug === edu.slug);
       applyTranslations(getStoredLang());
       window.addEventListener("langchange", (e) => {
         applyTranslations(
-          (e as CustomEvent<{ lang: "en" | "es" }>).detail.lang,
+          (e as CustomEvent<{ lang: "en" | "es" | "fr" }>).detail.lang,
         );
       });
     </script>
