@@ -1,0 +1,43 @@
+import type { Lang } from "../types";
+
+export const projectsPage = {
+  en: {
+    "projects.viewAll": "View All Projects",
+    "projects.backToHome": "Back to Home",
+    "projects.heading": "All Projects",
+    "projects.searchPlaceholder": "Search by name, description, tag…",
+    "projects.filterAll": "All",
+    "projects.sortLatest": "Latest",
+    "projects.sortName": "Name",
+    "projects.viewGrid": "Grid",
+    "projects.viewList": "List",
+    "projects.noResults": "No projects match your search.",
+    "projects.resultsCount": "projects found",
+  },
+  es: {
+    "projects.viewAll": "Ver Todos los Proyectos",
+    "projects.backToHome": "Volver al inicio",
+    "projects.heading": "Todos los Proyectos",
+    "projects.searchPlaceholder": "Buscar por nombre, descripción, etiqueta…",
+    "projects.filterAll": "Todos",
+    "projects.sortLatest": "Más reciente",
+    "projects.sortName": "Nombre",
+    "projects.viewGrid": "Cuadrícula",
+    "projects.viewList": "Lista",
+    "projects.noResults": "Ningún proyecto coincide con tu búsqueda.",
+    "projects.resultsCount": "proyectos encontrados",
+  },
+  fr: {
+    "projects.viewAll": "Voir Tous les Projets",
+    "projects.backToHome": "Retour à l'accueil",
+    "projects.heading": "Tous les Projets",
+    "projects.searchPlaceholder": "Rechercher par nom, description, étiquette…",
+    "projects.filterAll": "Tous",
+    "projects.sortLatest": "Plus récent",
+    "projects.sortName": "Nom",
+    "projects.viewGrid": "Grille",
+    "projects.viewList": "Liste",
+    "projects.noResults": "Aucun projet ne correspond à votre recherche.",
+    "projects.resultsCount": "projets trouvés",
+  },
+} as const satisfies Record<Lang, Record<string, string>>;
