@@ -52,6 +52,19 @@ export const ui = {
     "detail.viewOnGithub": "View on GitHub",
     "detail.keyContributions": "Key Contributions",
     "detail.achievements": "Achievements & Highlights",
+
+    // All-projects page
+    "projects.viewAll": "View All Projects",
+    "projects.backToHome": "Back to Home",
+    "projects.heading": "All Projects",
+    "projects.searchPlaceholder": "Search by name, description, tag…",
+    "projects.filterAll": "All",
+    "projects.sortLatest": "Latest",
+    "projects.sortName": "Name",
+    "projects.viewGrid": "Grid",
+    "projects.viewList": "List",
+    "projects.noResults": "No projects match your search.",
+    "projects.resultsCount": "projects found",
   },
   es: {
     // Nav
@@ -99,6 +112,19 @@ export const ui = {
     "detail.viewOnGithub": "Ver en GitHub",
     "detail.keyContributions": "Contribuciones Clave",
     "detail.achievements": "Logros Destacados",
+
+    // All-projects page
+    "projects.viewAll": "Ver Todos los Proyectos",
+    "projects.backToHome": "Volver al inicio",
+    "projects.heading": "Todos los Proyectos",
+    "projects.searchPlaceholder": "Buscar por nombre, descripción, etiqueta…",
+    "projects.filterAll": "Todos",
+    "projects.sortLatest": "Más reciente",
+    "projects.sortName": "Nombre",
+    "projects.viewGrid": "Cuadrícula",
+    "projects.viewList": "Lista",
+    "projects.noResults": "Ningún proyecto coincide con tu búsqueda.",
+    "projects.resultsCount": "proyectos encontrados",
   },
   fr: {
     // Nav
@@ -146,6 +172,19 @@ export const ui = {
     "detail.viewOnGithub": "Voir sur GitHub",
     "detail.keyContributions": "Contributions Clés",
     "detail.achievements": "Réalisations & Points Forts",
+
+    // All-projects page
+    "projects.viewAll": "Voir Tous les Projets",
+    "projects.backToHome": "Retour à l'accueil",
+    "projects.heading": "Tous les Projets",
+    "projects.searchPlaceholder": "Rechercher par nom, description, étiquette…",
+    "projects.filterAll": "Tous",
+    "projects.sortLatest": "Plus récent",
+    "projects.sortName": "Nom",
+    "projects.viewGrid": "Grille",
+    "projects.viewList": "Liste",
+    "projects.noResults": "Aucun projet ne correspond à votre recherche.",
+    "projects.resultsCount": "projets trouvés",
   },
 } as const satisfies Record<Lang, Record<string, string>>;
 
@@ -160,16 +199,22 @@ const SHARED = {
       slug: "ecommerce-market-intelligence-scraper",
       link: "", // Private enterprise project
       skills: ["Python", "Crawlee", "Web Automation", "Prefect", "AWS"],
+      tags: ["Data Engineering", "Web Scraping", "Cloud"],
+      year: 2026,
     },
     incident: {
       slug: "automated-incident-reporting-pipeline",
       link: "",
       skills: ["Node.js", "REST APIs", "Data Pipelines", "Power BI"],
+      tags: ["Data Engineering", "Automation", "Business Intelligence"],
+      year: 2024,
     },
     sensor: {
       slug: "real-time-sensor-data-platform",
       link: "",
       skills: ["Azure IoT", "Node.js", "TypeScript", "React", "Real-time Data"],
+      tags: ["IoT", "Full-Stack", "Real-time"],
+      year: 2024,
     },
   },
   experience: {

@@ -1,0 +1,548 @@
+---
+import { siteConfig } from "../../config";
+import { content, ui } from "../../i18n/translations";
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
+import "../../styles/global.css";
+
+// Build full project list merging config (structural) with EN content (text)
+const allProjects = siteConfig.projects.map((p) => ({
+  ...p,
+  ...content.en.projects.find((c) => c.slug === p.slug)!,
+}));
+
+// Collect all unique tags across all projects
+const allTags = [...new Set(siteConfig.projects.flatMap((p) => p.tags))];
+
+// Serialise data to be picked up by client-side script
+const projectsData = siteConfig.projects.map((p) => {
+  const enContent = content.en.projects.find((c) => c.slug === p.slug)!;
+  const esContent = content.es.projects.find((c) => c.slug === p.slug)!;
+  const frContent = content.fr.projects.find((c) => c.slug === p.slug)!;
+  return {
+    slug: p.slug,
+    link: p.link,
+    skills: p.skills,
+    tags: p.tags,
+    year: p.year,
+    en: { name: enContent.name, description: enContent.description },
+    es: { name: esContent.name, description: esContent.description },
+    fr: { name: frContent.name, description: frContent.description },
+  };
+});
+
+const accentColor = siteConfig.accentColor;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={`All projects by ${siteConfig.name}`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Projects — {siteConfig.name}</title>
+  </head>
+
+  <body class="bg-white min-h-screen">
+    <!-- Header -->
+    <header
+      class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100"
+    >
+      <nav
+        class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between"
+      >
+        <a
+          href="/"
+          class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors font-medium"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          <span data-i18n="projects.backToHome">Back to Home</span>
+        </a>
+
+        <!-- Lang Toggle -->
+        <div id="lang-toggle" class="flex items-center gap-1 text-sm font-mono">
+          {
+            ["en", "es", "fr"].map((lang) => (
+              <button
+                data-lang={lang}
+                class="lang-btn px-2 py-1 rounded transition-colors uppercase"
+              >
+                {lang}
+              </button>
+            ))
+          }
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main content -->
+    <main class="max-w-6xl mx-auto px-6 pt-28 pb-20">
+      <!-- Page heading -->
+      <div class="mb-10">
+        <h1
+          class="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-3"
+          data-i18n="projects.heading"
+        >
+          All Projects
+        </h1>
+        <div
+          class="w-[75px] h-[5px] rounded-full"
+          style={`background-color: ${accentColor}`}
+        >
+        </div>
+      </div>
+
+      <!-- Controls bar -->
+      <div
+        class="flex flex-col gap-4 mb-8 p-4 bg-gray-50 rounded-2xl border border-gray-200"
+      >
+        <!-- Search -->
+        <div class="relative">
+          <svg
+            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"></path>
+          </svg>
+          <input
+            id="search-input"
+            type="text"
+            class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+            style={`--tw-ring-color: ${accentColor}`}
+            data-i18n-placeholder="projects.searchPlaceholder"
+            placeholder="Search by name, description, tag…"
+          />
+        </div>
+
+        <!-- Second row: tags + sort + view toggle -->
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Tag filters -->
+          <div id="tag-filters" class="flex flex-wrap gap-2 flex-1">
+            <button
+              data-tag="all"
+              class="tag-btn px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-200"
+              data-i18n="projects.filterAll"
+            >
+              All
+            </button>
+            {
+              allTags.map((tag) => (
+                <button
+                  data-tag={tag}
+                  class="tag-btn px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-200"
+                >
+                  {tag}
+                </button>
+              ))
+            }
+          </div>
+
+          <!-- Divider -->
+          <div class="hidden sm:block w-px h-6 bg-gray-300"></div>
+
+          <!-- Sort -->
+          <div
+            class="flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1"
+          >
+            <button
+              id="sort-latest"
+              class="sort-btn px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200"
+              data-i18n="projects.sortLatest"
+            >
+              Latest
+            </button>
+            <button
+              id="sort-name"
+              class="sort-btn px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200"
+              data-i18n="projects.sortName"
+            >
+              Name
+            </button>
+          </div>
+
+          <!-- View toggle -->
+          <div
+            class="flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1"
+          >
+            <button
+              id="view-grid"
+              class="view-btn p-1.5 rounded-lg transition-all duration-200"
+              title="Grid view"
+              aria-label="Grid view"
+            >
+              <!-- 2×2 grid icon -->
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+                <rect x="1" y="1" width="6" height="6" rx="1"></rect>
+                <rect x="9" y="1" width="6" height="6" rx="1"></rect>
+                <rect x="1" y="9" width="6" height="6" rx="1"></rect>
+                <rect x="9" y="9" width="6" height="6" rx="1"></rect>
+              </svg>
+            </button>
+            <button
+              id="view-list"
+              class="view-btn p-1.5 rounded-lg transition-all duration-200"
+              title="List view"
+              aria-label="List view"
+            >
+              <!-- list icon -->
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results count -->
+      <p id="results-count" class="text-sm text-gray-500 mb-6"></p>
+
+      <!-- Project grid/list -->
+      <div
+        id="projects-container"
+        class="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- No results -->
+      <p
+        id="no-results"
+        class="hidden text-center text-gray-400 py-20 text-lg"
+        data-i18n="projects.noResults"
+      >
+        No projects match your search.
+      </p>
+    </main>
+
+    <Analytics />
+    <SpeedInsights />
+
+    <!-- Embed all data for client-side use -->
+    <script
+      id="projects-data"
+      type="application/json"
+      set:html={JSON.stringify(projectsData)}
+    />
+    <script
+      id="ui-data"
+      type="application/json"
+      set:html={JSON.stringify({ en: ui.en, es: ui.es, fr: ui.fr })}
+    />
+    <script define:vars={{ accentColor }}>
+      // ─── Constants ───────────────────────────────────────────────────────
+      const STORAGE_KEY = "lang";
+      const projects = JSON.parse(
+        document.getElementById("projects-data").textContent,
+      );
+      const uiStrings = JSON.parse(
+        document.getElementById("ui-data").textContent,
+      );
+
+      // ─── State ───────────────────────────────────────────────────────────
+      let currentLang =
+        localStorage.getItem(STORAGE_KEY) === "es"
+          ? "es"
+          : localStorage.getItem(STORAGE_KEY) === "fr"
+            ? "fr"
+            : "en";
+      let searchQuery = "";
+      let activeTag = "all";
+      let sortMode = "latest"; // 'latest' | 'name'
+      let viewMode = "grid"; // 'grid' | 'list'
+
+      // ─── Helpers ─────────────────────────────────────────────────────────
+      function t(key) {
+        return uiStrings[currentLang]?.[key] ?? uiStrings["en"][key] ?? key;
+      }
+
+      function getFilteredSorted() {
+        let list = [...projects];
+
+        // Tag filter
+        if (activeTag !== "all") {
+          list = list.filter((p) => p.tags.includes(activeTag));
+        }
+
+        // Search
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          list = list.filter((p) => {
+            const { name, description } = p[currentLang] || p.en;
+            return (
+              name.toLowerCase().includes(q) ||
+              description.toLowerCase().includes(q) ||
+              p.tags.some((tag) => tag.toLowerCase().includes(q)) ||
+              p.skills.some((s) => s.toLowerCase().includes(q))
+            );
+          });
+        }
+
+        // Sort
+        if (sortMode === "latest") {
+          list.sort((a, b) => b.year - a.year);
+        } else {
+          list.sort((a, b) => {
+            const na = (a[currentLang] || a.en).name;
+            const nb = (b[currentLang] || b.en).name;
+            return na.localeCompare(nb);
+          });
+        }
+
+        return list;
+      }
+
+      // ─── Card builders ───────────────────────────────────────────────────
+      function buildGridCard(p) {
+        const { name, description } = p[currentLang] || p.en;
+        const skillPills = p.skills
+          .map(
+            (s) =>
+              `<span class="px-2 py-1 bg-gray-900 text-white rounded-md text-xs font-medium">${s}</span>`,
+          )
+          .join("");
+        const tagPills = p.tags
+          .map(
+            (tag) =>
+              `<span class="px-2 py-1 rounded-md text-xs font-medium border" style="color:${accentColor};border-color:${accentColor}20;background:${accentColor}10">${tag}</span>`,
+          )
+          .join("");
+        const yearBadge = `<span class="text-xs font-mono text-gray-400">${p.year}</span>`;
+
+        return `
+          <a href="/project/${p.slug}" class="group flex flex-col h-full relative p-6 bg-gray-50 rounded-2xl border border-gray-200 transition-all duration-300 hover:bg-white hover:shadow-xl hover:border-gray-300 hover:-translate-y-1">
+            <div class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center bg-gray-900 rounded-full text-white transition-all duration-300 group-hover:bg-gray-700">
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17"/>
+              </svg>
+            </div>
+            <div class="flex-1 space-y-3 pr-10">
+              <div class="flex items-center gap-2">${yearBadge}</div>
+              <h2 class="text-lg font-bold text-gray-900 leading-snug">${name}</h2>
+              <p class="text-sm text-gray-600 leading-relaxed">${description}</p>
+              <div class="flex flex-wrap gap-1.5 pt-1">${tagPills}</div>
+            </div>
+            <div class="flex flex-wrap gap-1.5 pt-4 border-t border-gray-100 mt-4">${skillPills}</div>
+          </a>`;
+      }
+
+      function buildListCard(p) {
+        const { name, description } = p[currentLang] || p.en;
+        const skillPills = p.skills
+          .map(
+            (s) =>
+              `<span class="px-2 py-1 bg-gray-900 text-white rounded-md text-xs font-medium">${s}</span>`,
+          )
+          .join("");
+        const tagPills = p.tags
+          .map(
+            (tag) =>
+              `<span class="px-2 py-1 rounded-md text-xs font-medium border" style="color:${accentColor};border-color:${accentColor}20;background:${accentColor}10">${tag}</span>`,
+          )
+          .join("");
+
+        return `
+          <a href="/project/${p.slug}" class="group flex items-start gap-6 p-5 bg-gray-50 rounded-xl border border-gray-200 transition-all duration-300 hover:bg-white hover:shadow-lg hover:border-gray-300 hover:-translate-y-0.5">
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-2 mb-1">
+                <h2 class="text-base font-bold text-gray-900">${name}</h2>
+                <span class="text-xs font-mono text-gray-400">${p.year}</span>
+                ${tagPills}
+              </div>
+              <p class="text-sm text-gray-600 leading-relaxed mb-3">${description}</p>
+              <div class="flex flex-wrap gap-1.5">${skillPills}</div>
+            </div>
+            <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-gray-900 rounded-full text-white transition-all duration-300 group-hover:bg-gray-700">
+              <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17"/>
+              </svg>
+            </div>
+          </a>`;
+      }
+
+      // ─── Render ──────────────────────────────────────────────────────────
+      function render() {
+        const list = getFilteredSorted();
+        const container = document.getElementById("projects-container");
+        const noResults = document.getElementById("no-results");
+        const resultsCount = document.getElementById("results-count");
+
+        if (list.length === 0) {
+          container.innerHTML = "";
+          noResults.classList.remove("hidden");
+        } else {
+          noResults.classList.add("hidden");
+          container.innerHTML = list
+            .map((p) =>
+              viewMode === "grid" ? buildGridCard(p) : buildListCard(p),
+            )
+            .join("");
+        }
+
+        resultsCount.textContent = `${list.length} ${t("projects.resultsCount")}`;
+
+        // Update grid/list layout classes
+        if (viewMode === "grid") {
+          container.className = "grid grid-cols-1 md:grid-cols-2 gap-6";
+        } else {
+          container.className = "flex flex-col gap-4";
+        }
+      }
+
+      // ─── UI translation ──────────────────────────────────────────────────
+      function applyUiTranslations() {
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (key) el.textContent = t(key);
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+          const key = el.getAttribute("data-i18n-placeholder");
+          if (key) el.setAttribute("placeholder", t(key));
+        });
+      }
+
+      function applyLangButtonStyles() {
+        document.querySelectorAll(".lang-btn").forEach((btn) => {
+          const isActive = btn.getAttribute("data-lang") === currentLang;
+          btn.className = `lang-btn px-2 py-1 rounded transition-colors uppercase text-sm font-mono ${isActive ? "text-gray-900 font-bold" : "text-gray-400 hover:text-gray-600"}`;
+        });
+      }
+
+      function applyTagButtonStyles() {
+        document.querySelectorAll(".tag-btn").forEach((btn) => {
+          const tag = btn.getAttribute("data-tag");
+          const isActive = tag === activeTag;
+          if (isActive) {
+            btn.style.backgroundColor = accentColor;
+            btn.style.color = "white";
+            btn.style.borderColor = accentColor;
+          } else {
+            btn.style.backgroundColor = "white";
+            btn.style.color = "#374151";
+            btn.style.borderColor = "#e5e7eb";
+          }
+        });
+      }
+
+      function applySortButtonStyles() {
+        document.querySelectorAll(".sort-btn").forEach((btn) => {
+          const isActive =
+            (btn.id === "sort-latest" && sortMode === "latest") ||
+            (btn.id === "sort-name" && sortMode === "name");
+          btn.className = `sort-btn px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200 ${isActive ? "bg-gray-900 text-white" : "text-gray-500 hover:text-gray-900"}`;
+        });
+      }
+
+      function applyViewButtonStyles() {
+        ["grid", "list"].forEach((mode) => {
+          const btn = document.getElementById(`view-${mode}`);
+          const isActive = viewMode === mode;
+          btn.className = `view-btn p-1.5 rounded-lg transition-all duration-200 ${isActive ? "bg-gray-900 text-white" : "text-gray-400 hover:text-gray-900"}`;
+        });
+      }
+
+      function fullUpdate() {
+        applyUiTranslations();
+        applyLangButtonStyles();
+        applyTagButtonStyles();
+        applySortButtonStyles();
+        applyViewButtonStyles();
+        render();
+      }
+
+      // ─── Event listeners ─────────────────────────────────────────────────
+      document.getElementById("search-input").addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        render();
+      });
+
+      document.querySelectorAll(".tag-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          activeTag = btn.getAttribute("data-tag");
+          applyTagButtonStyles();
+          render();
+        });
+      });
+
+      document.getElementById("sort-latest").addEventListener("click", () => {
+        sortMode = "latest";
+        applySortButtonStyles();
+        render();
+      });
+
+      document.getElementById("sort-name").addEventListener("click", () => {
+        sortMode = "name";
+        applySortButtonStyles();
+        render();
+      });
+
+      document.getElementById("view-grid").addEventListener("click", () => {
+        viewMode = "grid";
+        applyViewButtonStyles();
+        render();
+      });
+
+      document.getElementById("view-list").addEventListener("click", () => {
+        viewMode = "list";
+        applyViewButtonStyles();
+        render();
+      });
+
+      document.querySelectorAll(".lang-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const lang = btn.getAttribute("data-lang");
+          currentLang = lang;
+          localStorage.setItem(STORAGE_KEY, lang);
+          fullUpdate();
+        });
+      });
+
+      // Focus ring uses accent colour via CSS variable
+      const searchEl = document.getElementById("search-input");
+      searchEl.style.setProperty("--tw-ring-color", accentColor);
+      searchEl.addEventListener("focus", () => {
+        searchEl.style.borderColor = accentColor;
+        searchEl.style.boxShadow = `0 0 0 3px ${accentColor}33`;
+      });
+      searchEl.addEventListener("blur", () => {
+        searchEl.style.borderColor = "#e5e7eb";
+        searchEl.style.boxShadow = "";
+      });
+
+      // ─── Init ────────────────────────────────────────────────────────────
+      fullUpdate();
+    </script>
+  </body>
+</html>

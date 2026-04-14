@@ -24,16 +24,22 @@ export const siteConfig = {
       slug: "ecommerce-market-intelligence-scraper",
       link: "https://github.com/tu-usuario/proyecto1",
       skills: ["Python", "Crawlee", "Web Automation", "Prefect", "AWS"],
+      tags: ["Data Engineering", "Web Scraping", "Cloud"],
+      year: 2026,
     },
     {
       slug: "automated-incident-reporting-pipeline",
       link: "https://github.com/tu-usuario/proyecto2",
       skills: ["Node.js", "REST APIs", "Data Pipelines", "Power BI"],
+      tags: ["Data Engineering", "Automation", "Business Intelligence"],
+      year: 2024,
     },
     {
       slug: "real-time-sensor-data-platform",
       link: "https://github.com/tu-usuario/proyecto3",
       skills: ["Azure IoT", "Node.js", "React", "TypeScript", "Real-time Data"],
+      tags: ["IoT", "Full-Stack", "Real-time"],
+      year: 2024,
     },
   ],
   experience: [
