@@ -1,6 +1,8 @@
 ---
 import { siteConfig } from "../../config";
 import { content } from "../../i18n/translations";
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
 import "../../styles/global.css";
 
 export function getStaticPaths() {
@@ -167,5 +169,7 @@ const projectContent = content.en.projects.find(
         );
       });
     </script>
+    <Analytics />
+    <SpeedInsights />
   </body>
 </html>

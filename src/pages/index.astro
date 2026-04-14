@@ -8,6 +8,8 @@ import Education from "../components/Education.astro";
 import Footer from "../components/Footer.astro";
 import { siteConfig } from "../config";
 import "../styles/global.css";
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
 ---
 
 <html lang="en">
@@ -35,6 +37,8 @@ import "../styles/global.css";
       <Education />
     </section>
     <Footer />
+    <Analytics />
+    <SpeedInsights />
 
     <script>
       import { applyTranslations, getStoredLang } from "../i18n/i18n";
